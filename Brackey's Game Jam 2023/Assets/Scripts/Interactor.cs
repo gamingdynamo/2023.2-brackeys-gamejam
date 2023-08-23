@@ -8,10 +8,22 @@ public class Interactor : MonoBehaviour
     public float interactorRadius = 1f;
     public LayerMask interactableLayerMask;
     public Interactable currentInteractable=null;
+    public bool interacting = false;
+    public Transform holdingposition;
+    public static Interactor instance;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(this);
     }
 
     // Update is called once per frame
@@ -29,9 +41,13 @@ public class Interactor : MonoBehaviour
 
        if (currentInteractable!=null)
        {
-            if (Input.GetButtonDown("Interact"))
+            if (Input.GetButtonDown("Interact")&&currentInteractable.interacted==false)
             {
                 currentInteractable.Interact();
+            }
+            else if(Input.GetButtonDown("Interact") && currentInteractable.interacted == true)
+            {
+                currentInteractable.UnInteract();
             }
        }
     }
